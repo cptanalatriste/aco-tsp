@@ -9,6 +9,8 @@ import java.util.List;
  */
 public class AntForTsp extends Ant<Integer, TspEnvironment> {
     public AntForTsp(int numberOfCities) {
+        super();
+        this.setSolution(new Integer[numberOfCities]);
     }
 
     @Override
