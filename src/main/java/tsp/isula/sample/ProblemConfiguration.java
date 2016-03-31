@@ -16,16 +16,16 @@ public class ProblemConfiguration implements ConfigurationProvider {
     }
 
     public double getEvaporationRatio() {
-        return 0;
+        return 0.6;
     }
 
     public int getNumberOfIterations() {
-        return 0;
+        return 50;
     }
 
 
     public double getInitialPheromoneValue() {
-        return 0;
+        return 0.0;
     }
 
 

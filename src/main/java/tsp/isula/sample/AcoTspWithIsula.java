@@ -1,5 +1,7 @@
 package tsp.isula.sample;
 
+import isula.aco.algorithms.antsystem.PerformEvaporation;
+import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
 import isula.aco.exception.InvalidInputException;
 
 import java.io.BufferedReader;
@@ -19,13 +21,17 @@ public class AcoTspWithIsula {
 
     public static void main(String... args) throws IOException, InvalidInputException {
         logger.info("ACO FOR THE TRAVELING SALESMAN PROBLEM");
-        ProblemConfiguration problemConfiguration = new ProblemConfiguration();
+        ProblemConfiguration configurationProvider = new ProblemConfiguration();
 
-        String fileName = problemConfiguration.getFileName();
+        String fileName = configurationProvider.getFileName();
         logger.info("fileName : " + fileName);
 
         double[][] problemRepresentation = getRepresentationFromFile(fileName);
-        TspProblemSolver problemSolver = new TspProblemSolver(problemRepresentation, problemConfiguration);
+        TspProblemSolver problemSolver = new TspProblemSolver(problemRepresentation, configurationProvider);
+
+        problemSolver.addDaemonActions(new StartPheromoneMatrix<Integer, TspEnvironment>(),
+                new PerformEvaporation<Integer, TspEnvironment>());
+
 
     }
 
