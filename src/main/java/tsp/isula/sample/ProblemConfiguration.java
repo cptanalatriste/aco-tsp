@@ -1,14 +1,33 @@
 package tsp.isula.sample;
 
 import isula.aco.ConfigurationProvider;
+import isula.aco.Environment;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Carlos G. Gavidia on 30/03/2016.
  */
 public class ProblemConfiguration implements ConfigurationProvider {
 
-    public String getFileName() {
-        return "C:\\Users\\Carlos G. Gavidia\\git\\aco-tsp\\src\\main\\resources\\berlin52.tsp";
+    private double initialPheromoneValue;
+
+    public ProblemConfiguration(double[][] problemRepresentation) {
+        List<Integer> randomSolution = new ArrayList<>();
+        int numberOfCities = problemRepresentation.length;
+
+        for (int cityIndex = 0; cityIndex < numberOfCities; cityIndex += 1) {
+            randomSolution.add(cityIndex);
+        }
+
+        Collections.shuffle(randomSolution);
+
+        double randomQuality = AntForTsp.getTotalDistance(
+                randomSolution.toArray(new Integer[randomSolution.size()]),
+                problemRepresentation);
+        this.initialPheromoneValue = numberOfCities / randomQuality;
     }
 
     public int getNumberOfAnts() {
@@ -25,7 +44,17 @@ public class ProblemConfiguration implements ConfigurationProvider {
 
 
     public double getInitialPheromoneValue() {
-        return 0.0;
+        return this.initialPheromoneValue;
+    }
+
+    @Override
+    public double getHeuristicImportance() {
+        return 2.5;
+    }
+
+    @Override
+    public double getPheromoneImportance() {
+        return 1.0;
     }
 
 

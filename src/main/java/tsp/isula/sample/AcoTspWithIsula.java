@@ -1,14 +1,17 @@
 package tsp.isula.sample;
 
 import isula.aco.algorithms.antsystem.PerformEvaporation;
+import isula.aco.algorithms.antsystem.RandomNodeSelection;
 import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
 import isula.aco.exception.InvalidInputException;
 
+import javax.naming.ConfigurationException;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -19,20 +22,23 @@ public class AcoTspWithIsula {
 
     private static Logger logger = Logger.getLogger(AcoTspWithIsula.class.getName());
 
-    public static void main(String... args) throws IOException, InvalidInputException {
+    public static void main(String... args) throws IOException, InvalidInputException, ConfigurationException {
         logger.info("ACO FOR THE TRAVELING SALESMAN PROBLEM");
-        ProblemConfiguration configurationProvider = new ProblemConfiguration();
 
-        String fileName = configurationProvider.getFileName();
+        String fileName = "C:\\Users\\Carlos G. Gavidia\\git\\aco-tsp\\src\\main\\resources\\berlin52.tsp";
         logger.info("fileName : " + fileName);
 
         double[][] problemRepresentation = getRepresentationFromFile(fileName);
+        ProblemConfiguration configurationProvider = new ProblemConfiguration(problemRepresentation);
+
+
         TspProblemSolver problemSolver = new TspProblemSolver(problemRepresentation, configurationProvider);
 
         problemSolver.addDaemonActions(new StartPheromoneMatrix<Integer, TspEnvironment>(),
-                new PerformEvaporation<Integer, TspEnvironment>());
+                new PerformEvaporation<Integer, TspEnvironment>(), new TspUpdatePheromoneMatrix());
 
-
+        problemSolver.getAntColony().addAntPolicies(new RandomNodeSelection<Integer, TspEnvironment>());
+        problemSolver.solveProblem();
     }
 
     private static double[][] getRepresentationFromFile(String fileName) throws IOException {

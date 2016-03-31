@@ -29,12 +29,13 @@ public class TspEnvironment extends Environment {
 
 
     public int getNumberOfCities() {
-        return numberOfCities;
+        return getProblemGraph().length;
     }
 
 
     @Override
     protected double[][] createPheromoneMatrix() {
+        int numberOfCities = getNumberOfCities();
         return new double[numberOfCities][numberOfCities];
     }
 }
