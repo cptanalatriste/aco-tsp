@@ -4,7 +4,6 @@ import isula.aco.Ant;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -79,7 +78,6 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
 
     public static double getTotalDistance(Integer[] route, double[][] problemRepresentation) {
         double totalDistance = 0.0;
-        EuclideanDistance distance = new EuclideanDistance();
 
         for (int solutionIndex = 1; solutionIndex < route.length; solutionIndex += 1) {
             int previousSolutionIndex = solutionIndex - 1;
@@ -92,16 +90,14 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
     public static double getDistance(int anIndex, int anotherIndex, double[][] problemRepresentation) {
         double[] aCoordinate = getCityCoordinates(anIndex, problemRepresentation);
         double[] anotherCoordinate = getCityCoordinates(anotherIndex, problemRepresentation);
-        double distance = new EuclideanDistance().compute(aCoordinate, anotherCoordinate);
 
-        return distance;
+        return new EuclideanDistance().compute(aCoordinate, anotherCoordinate);
 
     }
 
     private static double[] getCityCoordinates(int index, double[][] problemRepresentation) {
-        double[] coordinates = new double[]{problemRepresentation[index][0],
+        return new double[]{problemRepresentation[index][0],
                 problemRepresentation[index][1]};
-        return coordinates;
 
     }
 

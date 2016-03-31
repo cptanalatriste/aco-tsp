@@ -22,7 +22,6 @@ public class TspAntColony extends AntColony<Integer, TspEnvironment> {
 
     @Override
     protected Ant<Integer, TspEnvironment> createAnt(TspEnvironment environment) {
-        AntForTsp ant = new AntForTsp(numberOfCities, initialReference);
-        return ant;
+        return new AntForTsp(numberOfCities, initialReference);
     }
 }

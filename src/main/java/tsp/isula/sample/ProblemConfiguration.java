@@ -1,7 +1,6 @@
 package tsp.isula.sample;
 
 import isula.aco.ConfigurationProvider;
-import isula.aco.Environment;
 
 import java.util.ArrayList;
 import java.util.Collections;
