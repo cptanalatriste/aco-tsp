@@ -31,7 +31,7 @@ The implemented process has the following characteristics:
 
 The results 
 -----------
-For the berlin52 problem instance, the optional solution has a total distance of 7542 units. Under the current configuration, the solutions produced by the algorithm are around 8500 after an execution time of 1.5 seconds.
+For the berlin52 problem instance, the optional solution has a total distance of 7542 units. Under the current configuration, the solutions produced by the algorithm are around 7795 after an execution time of 1.5 seconds.
 
 How to use this code
 --------------------
