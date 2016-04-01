@@ -32,3 +32,21 @@ The implemented process has the following characteristics:
 The results 
 -----------
 For the berlin52 problem instance, the optional solution has a total distance of 7542 units. Under the current configuration, the solutions produced by the algorithm are around 10100 after an execution time of 0.5 seconds.
+
+How to use this code
+--------------------
+The code uploaded to this GitHub Repository corresponds to a Maven Java Project. You should be able to import it as an existing project to your current workspace.
+
+**This project depends on the Isula Framework**.  You need to download first the Isula Framework Project available on this Github Repository: https://github.com/cptanalatriste/isula
+
+Keep in mind that several file and folder locations were configured on the `AcoTspWithIsula.java` file. You need to set values according to your environment in order to avoid a `FileNotFoundException`. 
+
+More about Isula
+----------------
+Visit the Isula Framework site: http://cptanalatriste.github.io/isula/
+
+Review the Isula JavaDoc: http://cptanalatriste.github.io/isula/doc/
+
+Questions, issues or support?
+----------------------------
+Feel free to contact me at carlos.gavidia@pucp.edu.pe.
