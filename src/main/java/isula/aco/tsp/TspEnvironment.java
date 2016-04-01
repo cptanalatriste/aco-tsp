@@ -1,4 +1,4 @@
-package tsp.isula.sample;
+package isula.aco.tsp;
 
 import isula.aco.Environment;
 import isula.aco.exception.InvalidInputException;

@@ -1,10 +1,11 @@
-package tsp.isula.sample;
+package isula.aco.tsp;
 
 import isula.aco.Ant;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 
 /**
@@ -16,14 +17,20 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
     private static Logger logger = Logger.getLogger(AntForTsp.class.getName());
 
     private static final double DELTA = Float.MIN_VALUE;
+    private final int numberOfCities;
     private int initialReference;
 
-    public AntForTsp(int numberOfCities, int initialReference) {
+    public AntForTsp(int numberOfCities) {
         super();
+        this.numberOfCities = numberOfCities;
         this.setSolution(new Integer[numberOfCities]);
-        this.initialReference = initialReference;
     }
 
+    @Override
+    public void clear() {
+        super.clear();
+        this.initialReference = new Random().nextInt(this.numberOfCities);
+    }
 
     /**
      * On TSP, a solution is ready when all the cities are part of the solution.
@@ -81,8 +88,8 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
                                          TspEnvironment environment) {
 
         Integer previousComponent = this.initialReference;
-        if (this.getCurrentIndex() > 0) {
-            previousComponent = getSolution()[getCurrentIndex() - 1];
+        if (positionInSolution > 0) {
+            previousComponent = getSolution()[positionInSolution - 1];
         }
 
         double[][] pheromoneMatrix = environment.getPheromoneMatrix();

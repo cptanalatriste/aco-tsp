@@ -1,6 +1,7 @@
 package tsp.isula.sample;
 
 import isula.aco.ConfigurationProvider;
+import isula.aco.tsp.AntForTsp;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,7 +9,7 @@ import java.util.List;
 
 /**
  * This class contains the algorithm configuration of the Ant System algorithm described in
- * in Section 6.3 of Clever Algorithms by Jason Brownlee.
+ * Section 6.3 of the Clever Algorithms book by Jason Brownlee.
  */
 public class TspProblemConfiguration implements ConfigurationProvider {
 

@@ -6,6 +6,8 @@ import isula.aco.algorithms.antsystem.PerformEvaporation;
 import isula.aco.algorithms.antsystem.RandomNodeSelection;
 import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
 import isula.aco.exception.InvalidInputException;
+import isula.aco.tsp.AntForTsp;
+import isula.aco.tsp.TspEnvironment;
 
 import javax.naming.ConfigurationException;
 import java.io.BufferedReader;
@@ -18,7 +20,7 @@ import java.util.logging.Logger;
 
 /**
  * This class solves the Berlin52 instance of the TSPLIB repository using an Ant System algorithm,
- * trying to emulate the procedure present in Section 6.3 of Clever Algorithms by
+ * trying to emulate the procedure present in Section 6.3 of the Clever Algorithms book by
  * Jason Brownlee.
  */
 public class AcoTspWithIsula {
@@ -26,7 +28,7 @@ public class AcoTspWithIsula {
     private static Logger logger = Logger.getLogger(AcoTspWithIsula.class.getName());
 
     public static void main(String... args) throws IOException, InvalidInputException, ConfigurationException {
-        logger.info("ACO FOR THE TRAVELING SALESMAN PROBLEM");
+        logger.info("ANT SYSTEM FOR THE TRAVELING SALESMAN PROBLEM");
 
         String fileName = "C:\\Users\\Carlos G. Gavidia\\git\\aco-tsp\\src\\main\\resources\\berlin52.tsp";
         logger.info("fileName : " + fileName);
@@ -54,12 +56,12 @@ public class AcoTspWithIsula {
      * @param configurationProvider Algorithm configuration.
      * @return Ant Colony instance.
      */
-    private static AntColony<Integer, TspEnvironment> getAntColony(final TspProblemConfiguration configurationProvider) {
+    public static AntColony<Integer, TspEnvironment> getAntColony(final ConfigurationProvider configurationProvider) {
         return new AntColony<Integer, TspEnvironment>(configurationProvider.getNumberOfAnts()) {
             @Override
             protected Ant<Integer, TspEnvironment> createAnt(TspEnvironment environment) {
                 int initialReference = new Random().nextInt(environment.getNumberOfCities());
-                return new AntForTsp(environment.getNumberOfCities(), initialReference);
+                return new AntForTsp(environment.getNumberOfCities());
             }
         };
     }
@@ -83,7 +85,7 @@ public class AcoTspWithIsula {
         };
     }
 
-    private static double[][] getRepresentationFromFile(String fileName) throws IOException {
+    public static double[][] getRepresentationFromFile(String fileName) throws IOException {
         List<Double> xCoordinates = new ArrayList<>();
         List<Double> yCoordinates = new ArrayList<>();
 
