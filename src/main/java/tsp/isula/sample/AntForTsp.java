@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Created by Carlos G. Gavidia on 30/03/2016.
+ * An specialized Ant for building solutions for the TSP problem. It is designed according the algorithm described in
+ * Section 6.3 of Clever Algorithms by Jason Brownlee.
  */
 public class AntForTsp extends Ant<Integer, TspEnvironment> {
 
@@ -24,18 +25,39 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
     }
 
 
+    /**
+     * On TSP, a solution is ready when all the cities are part of the solution.
+     *
+     * @param environment Environment instance with problem information.
+     * @return True if the solution is ready.
+     */
     @Override
     public boolean isSolutionReady(TspEnvironment environment) {
         return getCurrentIndex() == environment.getNumberOfCities();
     }
 
 
+    /**
+     * On TSP, the cost of a solution is the total distance traversed by the salesman.
+     *
+     * @param environment Environment instance with problem information.
+     * @return Total distance.
+     */
     @Override
     public double getSolutionCost(TspEnvironment environment) {
         return getTotalDistance(getSolution(), environment.getProblemGraph());
     }
 
 
+    /**
+     * The heuristic contribution in TSP is related to the added travel distance given by selecting an specific component.
+     * According to the algorithm on the book, when the solution is empty we take a random city as a reference.
+     *
+     * @param solutionComponent  Solution component.
+     * @param positionInSolution Position of this component in the solution.
+     * @param environment        Environment instance with problem information.
+     * @return Heuristic contribution.
+     */
     @Override
     public Double getHeuristicValue(Integer solutionComponent, Integer positionInSolution, TspEnvironment environment) {
         Integer lastComponent = this.initialReference;
@@ -46,6 +68,12 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
         return 1 / distance;
     }
 
+    /**
+     * On TSP, the neighbourhood is given by the non-visited cities.
+     *
+     * @param environment Environment instance with problem information.
+     * @return
+     */
     @Override
     public List<Integer> getNeighbourhood(TspEnvironment environment) {
         List<Integer> neighbourhood = new ArrayList<>();
@@ -59,6 +87,14 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
         return neighbourhood;
     }
 
+    /**
+     * Just retrieves a value from the pheromone matrix.
+     *
+     * @param solutionComponent  Solution component.
+     * @param positionInSolution Position of this component in the solution.
+     * @param environment        Environment instance with problem information.
+     * @return
+     */
     @Override
     public Double getPheromoneTrailValue(Integer solutionComponent, Integer positionInSolution,
                                          TspEnvironment environment) {
@@ -67,15 +103,29 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
     }
 
 
+    /**
+     * Just updates the pheromone matrix.
+     *
+     * @param solutionComponent  Solution component.
+     * @param positionInSolution Position of this component in the solution.
+     * @param environment        Environment instance with problem information.
+     * @param value              New pheromone value.
+     */
     @Override
-    public void setPheromoneTrailValue(Integer solutionComponent, Integer positionInSolution, TspEnvironment environment, Double value) {
+    public void setPheromoneTrailValue(Integer solutionComponent, Integer positionInSolution,
+                                       TspEnvironment environment, Double value) {
         double[][] pheromoneMatrix = environment.getPheromoneMatrix();
-        //TODO(cgavidia): This method should also have the position in solution as a parameter. Verify impact in other projects.
-        //TODO(cgavidia): Fix the bug present on the Flow Shop solution.
         pheromoneMatrix[solutionComponent][positionInSolution] = value;
     }
 
 
+    /**
+     * Calculates the total distance of a route for the salesman.
+     *
+     * @param route                 Route to evaluate.
+     * @param problemRepresentation Coordinate information.
+     * @return Total distance.
+     */
     public static double getTotalDistance(Integer[] route, double[][] problemRepresentation) {
         double totalDistance = 0.0;
 
@@ -87,6 +137,14 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
         return totalDistance;
     }
 
+    /**
+     * Calculates the distance between two cities.
+     *
+     * @param anIndex               Index of a city.
+     * @param anotherIndex          Index of another city.
+     * @param problemRepresentation Coordinate information.
+     * @return Distance between these cities.
+     */
     public static double getDistance(int anIndex, int anotherIndex, double[][] problemRepresentation) {
         double[] aCoordinate = getCityCoordinates(anIndex, problemRepresentation);
         double[] anotherCoordinate = getCityCoordinates(anotherIndex, problemRepresentation);
@@ -95,6 +153,13 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
 
     }
 
+    /**
+     * Extracts the coordinates of a city from the coordinates array.
+     *
+     * @param index                 City index.
+     * @param problemRepresentation Coordinates array.
+     * @return Coordinates as a double array.
+     */
     private static double[] getCityCoordinates(int index, double[][] problemRepresentation) {
         return new double[]{problemRepresentation[index][0],
                 problemRepresentation[index][1]};

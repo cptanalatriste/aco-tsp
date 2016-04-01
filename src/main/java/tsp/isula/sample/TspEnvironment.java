@@ -6,7 +6,8 @@ import isula.aco.exception.InvalidInputException;
 import java.util.logging.Logger;
 
 /**
- * Created by Carlos G. Gavidia on 30/03/2016.
+ * The Environment type is for storing problem-specific information. In the TSP scenario, is only relateed
+ * to the number of cities.
  */
 public class TspEnvironment extends Environment {
 
@@ -14,16 +15,9 @@ public class TspEnvironment extends Environment {
 
     private final int numberOfCities;
 
-    /**
-     * Creates an Environment for the Ants to traverse.
-     *
-     * @param problemGraph Graph representation of the problem to be solved.
-     * @throws InvalidInputException When the problem graph is incorrectly formed.
-     */
     public TspEnvironment(double[][] problemGraph) throws InvalidInputException {
         super(problemGraph);
         this.numberOfCities = problemGraph.length;
-
         logger.info("Number of cities: " + numberOfCities);
     }
 
@@ -33,6 +27,12 @@ public class TspEnvironment extends Environment {
     }
 
 
+    /**
+     * The pheromone matrix in the TSP problem stores a pheromone value per city and per position of this city on
+     * the route. That explains the dimensions selected for the pheromone matrix.
+     *
+     * @return Pheromone matrix instance.
+     */
     @Override
     protected double[][] createPheromoneMatrix() {
         int numberOfCities = getNumberOfCities();

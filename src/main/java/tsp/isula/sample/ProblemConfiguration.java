@@ -7,12 +7,19 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by Carlos G. Gavidia on 30/03/2016.
+ * This class contains the algorithm configuration of the Ant System algorithm described in
+ * in Section 6.3 of Clever Algorithms by Jason Brownlee.
  */
 public class ProblemConfiguration implements ConfigurationProvider {
 
     private double initialPheromoneValue;
 
+    /**
+     * In the algorithm described in the book, the initial pheromone value was a function of the quality of a
+     * random solution. That logic is included in this constructor.
+     *
+     * @param problemRepresentation TSP coordinate information.
+     */
     public ProblemConfiguration(double[][] problemRepresentation) {
         List<Integer> randomSolution = new ArrayList<>();
         int numberOfCities = problemRepresentation.length;

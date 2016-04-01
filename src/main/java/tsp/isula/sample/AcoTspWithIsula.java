@@ -1,5 +1,7 @@
 package tsp.isula.sample;
 
+import isula.aco.*;
+import isula.aco.algorithms.antsystem.OfflinePheromoneUpdate;
 import isula.aco.algorithms.antsystem.PerformEvaporation;
 import isula.aco.algorithms.antsystem.RandomNodeSelection;
 import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
@@ -11,10 +13,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 
 /**
- * Created by Carlos G. Gavidia on 30/03/2016.
+ * This class solves the Berlin52 instance of the TSPLIB repository using an Ant System algorithm,
+ * trying to emulate the procedure present in Section 6.3 of Clever Algorithms by
+ * Jason Brownlee.
  */
 public class AcoTspWithIsula {
 
@@ -27,16 +32,55 @@ public class AcoTspWithIsula {
         logger.info("fileName : " + fileName);
 
         double[][] problemRepresentation = getRepresentationFromFile(fileName);
+
         ProblemConfiguration configurationProvider = new ProblemConfiguration(problemRepresentation);
+        AntColony<Integer, TspEnvironment> colony = getAntColony(configurationProvider);
+        TspEnvironment environment = new TspEnvironment(problemRepresentation);
 
+        AcoProblemSolver<Integer, TspEnvironment> solver = new AcoProblemSolver<>();
+        solver.initialize(environment, colony, configurationProvider);
+        solver.addDaemonActions(new StartPheromoneMatrix<Integer, TspEnvironment>(),
+                new PerformEvaporation<Integer, TspEnvironment>());
 
-        TspProblemSolver problemSolver = new TspProblemSolver(problemRepresentation, configurationProvider);
+        solver.addDaemonActions(getPheromoneUpdatePolicy());
 
-        problemSolver.addDaemonActions(new StartPheromoneMatrix<Integer, TspEnvironment>(),
-                new PerformEvaporation<Integer, TspEnvironment>(), new TspUpdatePheromoneMatrix());
+        solver.getAntColony().addAntPolicies(new RandomNodeSelection<Integer, TspEnvironment>());
+        solver.solveProblem();
+    }
 
-        problemSolver.getAntColony().addAntPolicies(new RandomNodeSelection<Integer, TspEnvironment>());
-        problemSolver.solveProblem();
+    /**
+     * Produces an Ant Colony instance for the TSP problem.
+     *
+     * @param configurationProvider Algorithm configuration.
+     * @return Ant Colony instance.
+     */
+    private static AntColony<Integer, TspEnvironment> getAntColony(final ProblemConfiguration configurationProvider) {
+        return new AntColony<Integer, TspEnvironment>(configurationProvider.getNumberOfAnts()) {
+            @Override
+            protected Ant<Integer, TspEnvironment> createAnt(TspEnvironment environment) {
+                int initialReference = new Random().nextInt(environment.getNumberOfCities());
+                return new AntForTsp(environment.getNumberOfCities(), initialReference);
+            }
+        };
+    }
+
+    /**
+     * On TSP, the pheromone value update procedure depends on the distance of the generated routes.
+     *
+     * @return A daemon action that implements this procedure.
+     */
+    private static DaemonAction<Integer, TspEnvironment> getPheromoneUpdatePolicy() {
+        return new OfflinePheromoneUpdate<Integer, TspEnvironment>() {
+            @Override
+            protected double getNewPheromoneValue(Ant<Integer, TspEnvironment> ant,
+                                                  Integer positionInSolution,
+                                                  Integer solutionComponent,
+                                                  TspEnvironment environment,
+                                                  ConfigurationProvider configurationProvider) {
+                Double contribution = 1 / ant.getSolutionCost(environment);
+                return ant.getPheromoneTrailValue(solutionComponent, positionInSolution, environment) + contribution;
+            }
+        };
     }
 
     private static double[][] getRepresentationFromFile(String fileName) throws IOException {
