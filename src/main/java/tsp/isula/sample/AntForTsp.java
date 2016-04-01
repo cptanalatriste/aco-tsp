@@ -16,7 +16,7 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
     private static Logger logger = Logger.getLogger(AntForTsp.class.getName());
 
     private static final double DELTA = Float.MIN_VALUE;
-    private final int initialReference;
+    private int initialReference;
 
     public AntForTsp(int numberOfCities, int initialReference) {
         super();
@@ -69,6 +69,27 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
     }
 
     /**
+     * Just retrieves a value from the pheromone matrix.
+     *
+     * @param solutionComponent  Solution component.
+     * @param positionInSolution Position of this component in the solution.
+     * @param environment        Environment instance with problem information.
+     * @return
+     */
+    @Override
+    public Double getPheromoneTrailValue(Integer solutionComponent, Integer positionInSolution,
+                                         TspEnvironment environment) {
+
+        Integer previousComponent = this.initialReference;
+        if (this.getCurrentIndex() > 0) {
+            previousComponent = getSolution()[getCurrentIndex() - 1];
+        }
+
+        double[][] pheromoneMatrix = environment.getPheromoneMatrix();
+        return pheromoneMatrix[solutionComponent][previousComponent];
+    }
+
+    /**
      * On TSP, the neighbourhood is given by the non-visited cities.
      *
      * @param environment Environment instance with problem information.
@@ -87,21 +108,6 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
         return neighbourhood;
     }
 
-    /**
-     * Just retrieves a value from the pheromone matrix.
-     *
-     * @param solutionComponent  Solution component.
-     * @param positionInSolution Position of this component in the solution.
-     * @param environment        Environment instance with problem information.
-     * @return
-     */
-    @Override
-    public Double getPheromoneTrailValue(Integer solutionComponent, Integer positionInSolution,
-                                         TspEnvironment environment) {
-        double[][] pheromoneMatrix = environment.getPheromoneMatrix();
-        return pheromoneMatrix[solutionComponent][positionInSolution];
-    }
-
 
     /**
      * Just updates the pheromone matrix.
@@ -114,8 +120,15 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
     @Override
     public void setPheromoneTrailValue(Integer solutionComponent, Integer positionInSolution,
                                        TspEnvironment environment, Double value) {
+        Integer previousComponent = this.initialReference;
+        if (positionInSolution > 0) {
+            previousComponent = getSolution()[positionInSolution - 1];
+        }
+
         double[][] pheromoneMatrix = environment.getPheromoneMatrix();
-        pheromoneMatrix[solutionComponent][positionInSolution] = value;
+        pheromoneMatrix[solutionComponent][previousComponent] = value;
+        pheromoneMatrix[previousComponent][solutionComponent] = value;
+
     }
 
 

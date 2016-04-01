@@ -10,7 +10,7 @@ import java.util.List;
  * This class contains the algorithm configuration of the Ant System algorithm described in
  * in Section 6.3 of Clever Algorithms by Jason Brownlee.
  */
-public class ProblemConfiguration implements ConfigurationProvider {
+public class TspProblemConfiguration implements ConfigurationProvider {
 
     private double initialPheromoneValue;
 
@@ -20,7 +20,7 @@ public class ProblemConfiguration implements ConfigurationProvider {
      *
      * @param problemRepresentation TSP coordinate information.
      */
-    public ProblemConfiguration(double[][] problemRepresentation) {
+    public TspProblemConfiguration(double[][] problemRepresentation) {
         List<Integer> randomSolution = new ArrayList<>();
         int numberOfCities = problemRepresentation.length;
 
@@ -37,11 +37,11 @@ public class ProblemConfiguration implements ConfigurationProvider {
     }
 
     public int getNumberOfAnts() {
-        return 10;
+        return 30;
     }
 
     public double getEvaporationRatio() {
-        return 0.6;
+        return 1 - 0.6;
     }
 
     public int getNumberOfIterations() {

@@ -33,7 +33,7 @@ public class AcoTspWithIsula {
 
         double[][] problemRepresentation = getRepresentationFromFile(fileName);
 
-        ProblemConfiguration configurationProvider = new ProblemConfiguration(problemRepresentation);
+        TspProblemConfiguration configurationProvider = new TspProblemConfiguration(problemRepresentation);
         AntColony<Integer, TspEnvironment> colony = getAntColony(configurationProvider);
         TspEnvironment environment = new TspEnvironment(problemRepresentation);
 
@@ -54,7 +54,7 @@ public class AcoTspWithIsula {
      * @param configurationProvider Algorithm configuration.
      * @return Ant Colony instance.
      */
-    private static AntColony<Integer, TspEnvironment> getAntColony(final ProblemConfiguration configurationProvider) {
+    private static AntColony<Integer, TspEnvironment> getAntColony(final TspProblemConfiguration configurationProvider) {
         return new AntColony<Integer, TspEnvironment>(configurationProvider.getNumberOfAnts()) {
             @Override
             protected Ant<Integer, TspEnvironment> createAnt(TspEnvironment environment) {
