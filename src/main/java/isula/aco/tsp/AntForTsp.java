@@ -154,6 +154,7 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
             totalDistance += getDistance(route[previousSolutionIndex], route[solutionIndex], problemRepresentation);
         }
 
+        totalDistance += getDistance(route[route.length - 1], route[0], problemRepresentation);
         return totalDistance;
     }
 
@@ -169,7 +170,7 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
         double[] aCoordinate = getCityCoordinates(anIndex, problemRepresentation);
         double[] anotherCoordinate = getCityCoordinates(anotherIndex, problemRepresentation);
 
-        return new EuclideanDistance().compute(aCoordinate, anotherCoordinate);
+        return Math.round(new EuclideanDistance().compute(aCoordinate, anotherCoordinate));
 
     }
 
