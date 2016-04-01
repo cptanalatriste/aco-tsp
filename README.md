@@ -28,3 +28,7 @@ The implemented process has the following characteristics:
 * The initial value of the cells of the pheromone matrix is a function of the number of cities in the problem instance and the quality of a random solution. See the ProblemConfiguration class for more details.
 * The evaporation ratio for the algorithm is 0.6 as described in the book. When all the ants have finished building their solutions, they deposit pheromone in the corresponding cells of the pheromone matrix it in a quantity proportional to the solution quality.
 * The Ants use the Random Proportional Rule for selecting solution components while traversing the problem graph, as it corresponds on an Ant System algorithm.
+
+The results 
+-----------
+For the berlin52 problem instance, the optional solution has a total distance of 7542 units. Under the current configuration, the solutions produced by the algorithm are around 10100 after an execution time of 0.5 seconds.
