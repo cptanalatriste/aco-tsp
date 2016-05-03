@@ -37,7 +37,7 @@ How to use this code
 --------------------
 The code uploaded to this GitHub Repository corresponds to a Maven Java Project. You should be able to import it as an existing project to your current workspace.
 
-**This project depends on the Isula Framework**.  You need to download first the Isula Framework Project available on this Github Repository: https://github.com/cptanalatriste/isula
+**This project depends on the Isula Framework**.  You need to download and install the Isula Framework Project on your local Maven repository. Follow the instructions available in https://github.com/cptanalatriste/isula
 
 Keep in mind that several file and folder locations were configured on the `AcoTspWithIsula.java` file. You need to set values according to your environment in order to avoid a `FileNotFoundException`. 
 
