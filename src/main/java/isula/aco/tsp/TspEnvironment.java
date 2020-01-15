@@ -23,7 +23,7 @@ public class TspEnvironment extends Environment {
 
 
     public int getNumberOfCities() {
-        return getProblemGraph().length;
+        return getProblemRepresentation().length;
     }
 
 

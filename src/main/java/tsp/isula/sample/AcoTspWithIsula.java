@@ -11,6 +11,7 @@ import isula.aco.tsp.TspEnvironment;
 
 import javax.naming.ConfigurationException;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class AcoTspWithIsula {
     public static void main(String... args) throws IOException, InvalidInputException, ConfigurationException {
         logger.info("ANT SYSTEM FOR THE TRAVELING SALESMAN PROBLEM");
 
-        String fileName = "C:\\Users\\Carlos G. Gavidia\\git\\aco-tsp\\src\\main\\resources\\berlin52.tsp";
+        String fileName = "berlin52.tsp";
         logger.info("fileName : " + fileName);
 
         double[][] problemRepresentation = getRepresentationFromFile(fileName);
@@ -74,13 +75,13 @@ public class AcoTspWithIsula {
     private static DaemonAction<Integer, TspEnvironment> getPheromoneUpdatePolicy() {
         return new OfflinePheromoneUpdate<Integer, TspEnvironment>() {
             @Override
-            protected double getNewPheromoneValue(Ant<Integer, TspEnvironment> ant,
-                                                  Integer positionInSolution,
-                                                  Integer solutionComponent,
-                                                  TspEnvironment environment,
-                                                  ConfigurationProvider configurationProvider) {
+            protected double getPheromoneDeposit(Ant<Integer, TspEnvironment> ant,
+                                                 Integer positionInSolution,
+                                                 Integer solutionComponent,
+                                                 TspEnvironment environment,
+                                                 ConfigurationProvider configurationProvider) {
                 Double contribution = 1 / ant.getSolutionCost(environment);
-                return ant.getPheromoneTrailValue(solutionComponent, positionInSolution, environment) + contribution;
+                return contribution;
             }
         };
     }
@@ -88,8 +89,8 @@ public class AcoTspWithIsula {
     public static double[][] getRepresentationFromFile(String fileName) throws IOException {
         List<Double> xCoordinates = new ArrayList<>();
         List<Double> yCoordinates = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+        File file = new File(AcoTspWithIsula.class.getClassLoader().getResource(fileName).getFile());
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = null;
             while ((line = reader.readLine()) != null) {
                 String[] tokens = line.split(" ");

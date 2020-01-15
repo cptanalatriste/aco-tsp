@@ -52,7 +52,7 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
      */
     @Override
     public double getSolutionCost(TspEnvironment environment) {
-        return getTotalDistance(getSolution(), environment.getProblemGraph());
+        return getTotalDistance(getSolution(), environment.getProblemRepresentation());
     }
 
 
@@ -71,7 +71,7 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
         if (getCurrentIndex() > 0) {
             lastComponent = this.getSolution()[getCurrentIndex() - 1];
         }
-        double distance = getDistance(lastComponent, solutionComponent, environment.getProblemGraph()) + DELTA;
+        double distance = getDistance(lastComponent, solutionComponent, environment.getProblemRepresentation()) + DELTA;
         return 1 / distance;
     }
 
@@ -155,6 +155,7 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
         }
 
         totalDistance += getDistance(route[route.length - 1], route[0], problemRepresentation);
+
         return totalDistance;
     }
 
