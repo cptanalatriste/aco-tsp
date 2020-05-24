@@ -1,4 +1,7 @@
 # aco-tsp
+
+[![Build Status](https://travis-ci.org/cptanalatriste/aco-tsp.svg?branch=master)](https://travis-ci.org/cptanalatriste/aco-tsp)
+
 A Java Program that solves the Travelling Salesman Problem using the Ant System algorithm. The algorithm details and configuration where taken from in Section 6.3 of the Clever Algorithms book by Jason Brownlee.
 
 In the same fashion as the book, we use the berlin52 instance from TSPLIB as a testbed for the program.
@@ -35,9 +38,11 @@ For the berlin52 problem instance, the optional solution has a total distance of
 
 How to use this code
 --------------------
-The code uploaded to this GitHub Repository corresponds to a Maven Java Project. As such, it is strongly recommended that you have Maven installed before working with it.
+The code uploaded to this GitHub Repository corresponds to a Maven Java Project. 
+As such, it is strongly recommended that you have Maven installed before working with it.
 
-**This project depends on the Isula Framework**.  You need to download and install the Isula Framework Project on your local Maven repository. Follow the instructions available in https://github.com/cptanalatriste/isula
+**This project depends on the Isula Framework**. Follow the instructions available in 
+https://github.com/cptanalatriste/isula
 
 Keep in mind that several file and folder locations were configured on the `AcoTspWithIsula.java` file. You need to set values according to your environment in order to avoid a `FileNotFoundException`. Once this is ready, you can launch this project by executing `mvn exec:java -Dexec.mainClass="tsp.isula.sample.AcoTspWithIsula"` from the project root folder.
 
