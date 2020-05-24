@@ -7,23 +7,36 @@
     <groupId>isula</groupId>
     <artifactId>aco-tsp</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <properties>
+        <project.java.version>1.8</project.java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>isula</id>
+            <url>https://packagecloud.io/cgavidia/isula/maven2
+            </url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>isula</groupId>
             <artifactId>isula</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
