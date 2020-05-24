@@ -6,7 +6,7 @@
 
     <groupId>isula</groupId>
     <artifactId>aco-tsp</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <properties>
         <project.java.version>1.8</project.java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,6 +24,13 @@
                 </configuration>
             </plugin>
         </plugins>
+        <extensions>
+            <extension>
+                <groupId>io.packagecloud.maven.wagon</groupId>
+                <artifactId>maven-packagecloud-wagon</artifactId>
+                <version>0.0.4</version>
+            </extension>
+        </extensions>
     </build>
     <repositories>
         <repository>
@@ -44,4 +51,14 @@
             <version>3.2</version>
         </dependency>
     </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>packagecloud-travis</id>
+            <url>packagecloud+https://packagecloud.io/cgavidia/aco-tsp</url>
+        </repository>
+        <snapshotRepository>
+            <id>packagecloud-travis</id>
+            <url>packagecloud+https://packagecloud.io/cgavidia/aco-tsp</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
