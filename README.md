@@ -1,6 +1,7 @@
 # aco-tsp
 
 [![Build Status](https://travis-ci.org/cptanalatriste/aco-tsp.svg?branch=master)](https://travis-ci.org/cptanalatriste/aco-tsp)
+[![packagecloud](https://img.shields.io/badge/java-packagecloud.io-844fec.svg)](https://packagecloud.io/cgavidia/aco-tsp)
 
 A Java Program that solves the Travelling Salesman Problem using the Ant System algorithm. The algorithm details and configuration where taken from in Section 6.3 of the Clever Algorithms book by Jason Brownlee.
 
