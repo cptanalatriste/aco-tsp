@@ -5,7 +5,6 @@ import isula.aco.algorithms.antsystem.OfflinePheromoneUpdate;
 import isula.aco.algorithms.antsystem.PerformEvaporation;
 import isula.aco.algorithms.antsystem.RandomNodeSelection;
 import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
-import isula.aco.exception.InvalidInputException;
 import isula.aco.tsp.AntForTsp;
 import isula.aco.tsp.TspEnvironment;
 
@@ -16,7 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
@@ -28,7 +27,7 @@ public class AcoTspWithIsula {
 
     private static Logger logger = Logger.getLogger(AcoTspWithIsula.class.getName());
 
-    public static void main(String... args) throws IOException, InvalidInputException, ConfigurationException {
+    public static void main(String... args) throws IOException, ConfigurationException {
         logger.info("ANT SYSTEM FOR THE TRAVELING SALESMAN PROBLEM");
 
         String fileName = "berlin52.tsp";
@@ -42,12 +41,12 @@ public class AcoTspWithIsula {
 
         AcoProblemSolver<Integer, TspEnvironment> solver = new AcoProblemSolver<>();
         solver.initialize(environment, colony, configurationProvider);
-        solver.addDaemonActions(new StartPheromoneMatrix<Integer, TspEnvironment>(),
-                new PerformEvaporation<Integer, TspEnvironment>());
+        solver.addDaemonActions(new StartPheromoneMatrix<>(),
+                new PerformEvaporation<>());
 
         solver.addDaemonActions(getPheromoneUpdatePolicy());
 
-        solver.getAntColony().addAntPolicies(new RandomNodeSelection<Integer, TspEnvironment>());
+        solver.getAntColony().addAntPolicies(new RandomNodeSelection<>());
         solver.solveProblem();
     }
 
@@ -61,7 +60,6 @@ public class AcoTspWithIsula {
         return new AntColony<Integer, TspEnvironment>(configurationProvider.getNumberOfAnts()) {
             @Override
             protected Ant<Integer, TspEnvironment> createAnt(TspEnvironment environment) {
-                int initialReference = new Random().nextInt(environment.getNumberOfCities());
                 return new AntForTsp(environment.getNumberOfCities());
             }
         };
@@ -80,8 +78,7 @@ public class AcoTspWithIsula {
                                                  Integer solutionComponent,
                                                  TspEnvironment environment,
                                                  ConfigurationProvider configurationProvider) {
-                Double contribution = 1 / ant.getSolutionCost(environment);
-                return contribution;
+                return 1 / ant.getSolutionCost(environment);
             }
         };
     }
@@ -89,9 +86,9 @@ public class AcoTspWithIsula {
     public static double[][] getRepresentationFromFile(String fileName) throws IOException {
         List<Double> xCoordinates = new ArrayList<>();
         List<Double> yCoordinates = new ArrayList<>();
-        File file = new File(AcoTspWithIsula.class.getClassLoader().getResource(fileName).getFile());
+        File file = new File(Objects.requireNonNull(AcoTspWithIsula.class.getClassLoader().getResource(fileName)).getFile());
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
                 String[] tokens = line.split(" ");
 

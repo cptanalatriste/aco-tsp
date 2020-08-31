@@ -1,7 +1,6 @@
 package isula.aco.tsp;
 
 import isula.aco.Environment;
-import isula.aco.exception.InvalidInputException;
 
 import java.util.logging.Logger;
 
@@ -13,17 +12,24 @@ public class TspEnvironment extends Environment {
 
     private static Logger logger = Logger.getLogger(TspEnvironment.class.getName());
 
-    private final int numberOfCities;
+    private final double[][] problemRepresentation;
 
-    public TspEnvironment(double[][] problemGraph) throws InvalidInputException {
-        super(problemGraph);
-        this.numberOfCities = problemGraph.length;
+    public TspEnvironment(double[][] problemGraph) {
+        super();
+        this.problemRepresentation = problemGraph;
+        this.setPheromoneMatrix(createPheromoneMatrix());
+
+        int numberOfCities = problemGraph.length;
         logger.info("Number of cities: " + numberOfCities);
     }
 
 
     public int getNumberOfCities() {
         return getProblemRepresentation().length;
+    }
+
+    public double[][] getProblemRepresentation() {
+        return this.problemRepresentation;
     }
 
 
@@ -35,7 +41,12 @@ public class TspEnvironment extends Environment {
      */
     @Override
     protected double[][] createPheromoneMatrix() {
-        int numberOfCities = getNumberOfCities();
-        return new double[numberOfCities][numberOfCities];
+        if (this.problemRepresentation != null) {
+            int numberOfCities = getNumberOfCities();
+            return new double[numberOfCities][numberOfCities];
+        }
+
+        return null;
+
     }
 }

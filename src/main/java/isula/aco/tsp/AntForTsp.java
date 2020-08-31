@@ -6,15 +6,12 @@ import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Logger;
 
 /**
  * An specialized Ant for building solutions for the TSP problem. It is designed according the algorithm described in
  * Section 6.3 of Clever Algorithms by Jason Brownlee.
  */
 public class AntForTsp extends Ant<Integer, TspEnvironment> {
-
-    private static Logger logger = Logger.getLogger(AntForTsp.class.getName());
 
     private static final double DELTA = Float.MIN_VALUE;
     private final int numberOfCities;
@@ -23,7 +20,7 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
     public AntForTsp(int numberOfCities) {
         super();
         this.numberOfCities = numberOfCities;
-        this.setSolution(new Integer[numberOfCities]);
+        this.setSolution(new ArrayList<>());
     }
 
     @Override
@@ -55,6 +52,11 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
         return getTotalDistance(getSolution(), environment.getProblemRepresentation());
     }
 
+    @Override
+    public double getSolutionCost(TspEnvironment environment, List<Integer> solution) {
+        return getTotalDistance(solution, environment.getProblemRepresentation());
+    }
+
 
     /**
      * The heuristic contribution in TSP is related to the added travel distance given by selecting an specific component.
@@ -69,7 +71,7 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
     public Double getHeuristicValue(Integer solutionComponent, Integer positionInSolution, TspEnvironment environment) {
         Integer lastComponent = this.initialReference;
         if (getCurrentIndex() > 0) {
-            lastComponent = this.getSolution()[getCurrentIndex() - 1];
+            lastComponent = this.getSolution().get(getCurrentIndex() - 1);
         }
         double distance = getDistance(lastComponent, solutionComponent, environment.getProblemRepresentation()) + DELTA;
         return 1 / distance;
@@ -81,7 +83,6 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
      * @param solutionComponent  Solution component.
      * @param positionInSolution Position of this component in the solution.
      * @param environment        Environment instance with problem information.
-     * @return
      */
     @Override
     public Double getPheromoneTrailValue(Integer solutionComponent, Integer positionInSolution,
@@ -89,7 +90,7 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
 
         Integer previousComponent = this.initialReference;
         if (positionInSolution > 0) {
-            previousComponent = getSolution()[positionInSolution - 1];
+            previousComponent = getSolution().get(positionInSolution - 1);
         }
 
         double[][] pheromoneMatrix = environment.getPheromoneMatrix();
@@ -100,7 +101,6 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
      * On TSP, the neighbourhood is given by the non-visited cities.
      *
      * @param environment Environment instance with problem information.
-     * @return
      */
     @Override
     public List<Integer> getNeighbourhood(TspEnvironment environment) {
@@ -129,7 +129,7 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
                                        TspEnvironment environment, Double value) {
         Integer previousComponent = this.initialReference;
         if (positionInSolution > 0) {
-            previousComponent = getSolution()[positionInSolution - 1];
+            previousComponent = getSolution().get(positionInSolution - 1);
         }
 
         double[][] pheromoneMatrix = environment.getPheromoneMatrix();
@@ -146,15 +146,15 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
      * @param problemRepresentation Coordinate information.
      * @return Total distance.
      */
-    public static double getTotalDistance(Integer[] route, double[][] problemRepresentation) {
+    public static double getTotalDistance(List<Integer> route, double[][] problemRepresentation) {
         double totalDistance = 0.0;
 
-        for (int solutionIndex = 1; solutionIndex < route.length; solutionIndex += 1) {
+        for (int solutionIndex = 1; solutionIndex < route.size(); solutionIndex += 1) {
             int previousSolutionIndex = solutionIndex - 1;
-            totalDistance += getDistance(route[previousSolutionIndex], route[solutionIndex], problemRepresentation);
+            totalDistance += getDistance(route.get(previousSolutionIndex), route.get(solutionIndex), problemRepresentation);
         }
 
-        totalDistance += getDistance(route[route.length - 1], route[0], problemRepresentation);
+        totalDistance += getDistance(route.get(route.size() - 1), route.get(0), problemRepresentation);
 
         return totalDistance;
     }

@@ -31,9 +31,7 @@ public class TspProblemConfiguration implements ConfigurationProvider {
 
         Collections.shuffle(randomSolution);
 
-        double randomQuality = AntForTsp.getTotalDistance(
-                randomSolution.toArray(new Integer[randomSolution.size()]),
-                problemRepresentation);
+        double randomQuality = AntForTsp.getTotalDistance(randomSolution, problemRepresentation);
         this.initialPheromoneValue = numberOfCities / randomQuality;
     }
 
@@ -46,7 +44,7 @@ public class TspProblemConfiguration implements ConfigurationProvider {
     }
 
     public int getNumberOfIterations() {
-        return 50;
+        return 100;
     }
 
 
