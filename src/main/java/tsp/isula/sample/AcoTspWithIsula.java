@@ -6,6 +6,7 @@ import isula.aco.algorithms.antsystem.PerformEvaporation;
 import isula.aco.algorithms.antsystem.RandomNodeSelection;
 import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
 import isula.aco.tsp.AntForTsp;
+import isula.aco.tsp.EdgeWeightType;
 import isula.aco.tsp.TspEnvironment;
 
 import javax.naming.ConfigurationException;
@@ -25,29 +26,49 @@ import java.util.logging.Logger;
  */
 public class AcoTspWithIsula {
 
+    public static final String BERLIN_52_TSP_FILE = "berlin52.tsp"; // Lower bound: 7542
+    public static final String ATT_48_TSP_FILE = "att48.tsp"; // Lower bound: 10628
+
     private static Logger logger = Logger.getLogger(AcoTspWithIsula.class.getName());
 
     public static void main(String... args) throws IOException, ConfigurationException {
         logger.info("ANT SYSTEM FOR THE TRAVELING SALESMAN PROBLEM");
 
-        String fileName = "berlin52.tsp";
+        String fileName = BERLIN_52_TSP_FILE;
+//        String fileName = ATT_48_TSP_FILE;
         logger.info("fileName : " + fileName);
 
         double[][] problemRepresentation = getRepresentationFromFile(fileName);
+        EdgeWeightType edgeWeightType = getEdgeWeightTypeFromFile(fileName);
+        TspEnvironment environment = new TspEnvironment(problemRepresentation, edgeWeightType);
 
-        TspProblemConfiguration configurationProvider = new TspProblemConfiguration(problemRepresentation);
+        TspProblemConfiguration configurationProvider = new TspProblemConfiguration(environment);
         AntColony<Integer, TspEnvironment> colony = getAntColony(configurationProvider);
-        TspEnvironment environment = new TspEnvironment(problemRepresentation);
 
         AcoProblemSolver<Integer, TspEnvironment> solver = new AcoProblemSolver<>();
         solver.initialize(environment, colony, configurationProvider);
         solver.addDaemonActions(new StartPheromoneMatrix<>(),
-                new PerformEvaporation<>());
+            new PerformEvaporation<>());
 
         solver.addDaemonActions(getPheromoneUpdatePolicy());
 
         solver.getAntColony().addAntPolicies(new RandomNodeSelection<>());
         solver.solveProblem();
+    }
+
+    private static EdgeWeightType getEdgeWeightTypeFromFile(String fileName) throws IOException {
+        File file = new File(Objects.requireNonNull(AcoTspWithIsula.class.getClassLoader().getResource(fileName)).getFile());
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("EDGE_WEIGHT_TYPE: EUC_2D")) {
+                    return EdgeWeightType.EUCLIDEAN_DISTANCE;
+                } else if (line.contains("EDGE_WEIGHT_TYPE: ATT")) {
+                    return EdgeWeightType.PSEUDO_EUCLIDEAN_DISTANCE;
+                }
+            }
+        }
+        return null;
     }
 
     /**

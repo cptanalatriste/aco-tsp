@@ -49,12 +49,12 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
      */
     @Override
     public double getSolutionCost(TspEnvironment environment) {
-        return getTotalDistance(getSolution(), environment.getProblemRepresentation());
+        return getTotalDistance(getSolution(), environment);
     }
 
     @Override
     public double getSolutionCost(TspEnvironment environment, List<Integer> solution) {
-        return getTotalDistance(solution, environment.getProblemRepresentation());
+        return getTotalDistance(solution, environment);
     }
 
 
@@ -73,7 +73,7 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
         if (getCurrentIndex() > 0) {
             lastComponent = this.getSolution().get(getCurrentIndex() - 1);
         }
-        double distance = getDistance(lastComponent, solutionComponent, environment.getProblemRepresentation()) + DELTA;
+        double distance = getDistance(lastComponent, solutionComponent, environment) + DELTA;
         return 1 / distance;
     }
 
@@ -142,19 +142,19 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
     /**
      * Calculates the total distance of a route for the salesman.
      *
-     * @param route                 Route to evaluate.
-     * @param problemRepresentation Coordinate information.
+     * @param route       Route to evaluate.
+     * @param environment Environment with coordinate information.
      * @return Total distance.
      */
-    public static double getTotalDistance(List<Integer> route, double[][] problemRepresentation) {
+    public static double getTotalDistance(List<Integer> route, TspEnvironment environment) {
         double totalDistance = 0.0;
 
         for (int solutionIndex = 1; solutionIndex < route.size(); solutionIndex += 1) {
             int previousSolutionIndex = solutionIndex - 1;
-            totalDistance += getDistance(route.get(previousSolutionIndex), route.get(solutionIndex), problemRepresentation);
+            totalDistance += getDistance(route.get(previousSolutionIndex), route.get(solutionIndex), environment);
         }
 
-        totalDistance += getDistance(route.get(route.size() - 1), route.get(0), problemRepresentation);
+        totalDistance += getDistance(route.get(route.size() - 1), route.get(0), environment);
 
         return totalDistance;
     }
@@ -162,17 +162,43 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
     /**
      * Calculates the distance between two cities.
      *
-     * @param anIndex               Index of a city.
-     * @param anotherIndex          Index of another city.
-     * @param problemRepresentation Coordinate information.
+     * @param anIndex      Index of a city.
+     * @param anotherIndex Index of another city.
+     * @param environment  Environment with Coordinate information.
      * @return Distance between these cities.
      */
-    public static double getDistance(int anIndex, int anotherIndex, double[][] problemRepresentation) {
+    public static double getDistance(int anIndex, int anotherIndex, TspEnvironment environment) {
+        if (EdgeWeightType.EUCLIDEAN_DISTANCE.equals(environment.getEdgeWeightType())) {
+            return getEuclideanDistance(anIndex, anotherIndex, environment.getProblemRepresentation());
+        } else if (EdgeWeightType.PSEUDO_EUCLIDEAN_DISTANCE.equals(environment.getEdgeWeightType())) {
+            return getPseudoEuclideanDistance(anIndex, anotherIndex, environment.getProblemRepresentation());
+        }
+
+        throw new RuntimeException("Edge Weight Type unespecified or not supported");
+    }
+
+
+    static double getEuclideanDistance(int anIndex, int anotherIndex, double[][] problemRepresentation) {
         double[] aCoordinate = getCityCoordinates(anIndex, problemRepresentation);
         double[] anotherCoordinate = getCityCoordinates(anotherIndex, problemRepresentation);
 
         return Math.round(new EuclideanDistance().compute(aCoordinate, anotherCoordinate));
+    }
 
+    static double getPseudoEuclideanDistance(int anIndex, int anotherIndex, double[][] problemRepresentation) {
+        double[] aCoordinate = getCityCoordinates(anIndex, problemRepresentation);
+        double[] anotherCoordinate = getCityCoordinates(anotherIndex, problemRepresentation);
+
+        double xDelta = aCoordinate[0] - anotherCoordinate[0];
+        double yDelta = aCoordinate[1] - anotherCoordinate[1];
+        double candidateDistance = Math.sqrt((Math.pow(xDelta, 2) + Math.pow(yDelta, 2)) / 10.0);
+        long roundCandidateDistance = Math.round(candidateDistance);
+
+        if (roundCandidateDistance < candidateDistance) {
+            return roundCandidateDistance + 1;
+        }
+
+        return roundCandidateDistance;
     }
 
     /**
@@ -183,8 +209,8 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
      * @return Coordinates as a double array.
      */
     private static double[] getCityCoordinates(int index, double[][] problemRepresentation) {
-        return new double[]{problemRepresentation[index][0],
-                problemRepresentation[index][1]};
+        return new double[] {problemRepresentation[index][0],
+            problemRepresentation[index][1]};
 
     }
 

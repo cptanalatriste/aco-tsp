@@ -3,7 +3,7 @@ package isula.aco.tsp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static isula.aco.tsp.AntForTsp.getDistance;
+import static isula.aco.tsp.AntForTsp.getEuclideanDistance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AntForTspTest {
@@ -14,13 +14,13 @@ class AntForTspTest {
     @BeforeEach
     void setUp() {
         double[][] problemRepresentation = {{1, 1},
-                {2, 2},
-                {2, 3},
-                {3, 3},
-                {3, 2},
-                {3, 1}};
+            {2, 2},
+            {2, 3},
+            {3, 3},
+            {3, 2},
+            {3, 1}};
 
-        environment = new TspEnvironment(problemRepresentation);
+        environment = new TspEnvironment(problemRepresentation, EdgeWeightType.EUCLIDEAN_DISTANCE);
         ant = new AntForTsp(environment.getNumberOfCities());
     }
 
@@ -46,10 +46,10 @@ class AntForTspTest {
         double[][] problemRepresentation = environment.getProblemRepresentation();
 
         double expectedDistance = Math.round(Math.sqrt(2));
-        assertEquals(expectedDistance, getDistance(0, 1, problemRepresentation));
+        assertEquals(expectedDistance, getEuclideanDistance(0, 1, problemRepresentation));
 
         expectedDistance = 1.0;
-        assertEquals(expectedDistance, getDistance(1, 2, problemRepresentation));
+        assertEquals(expectedDistance, getEuclideanDistance(1, 2, problemRepresentation));
 
     }
 }

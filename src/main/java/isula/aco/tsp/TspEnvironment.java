@@ -13,14 +13,19 @@ public class TspEnvironment extends Environment {
     private static Logger logger = Logger.getLogger(TspEnvironment.class.getName());
 
     private final double[][] problemRepresentation;
+    private final EdgeWeightType edgeWeightType;
 
-    public TspEnvironment(double[][] problemGraph) {
+    public TspEnvironment(double[][] problemGraph, EdgeWeightType edgeWeightType) {
         super();
         this.problemRepresentation = problemGraph;
         this.setPheromoneMatrix(createPheromoneMatrix());
+        this.edgeWeightType = edgeWeightType;
 
         int numberOfCities = problemGraph.length;
+
         logger.info("Number of cities: " + numberOfCities);
+        logger.info("Edge weight type: " + this.edgeWeightType);
+
     }
 
 
@@ -48,5 +53,9 @@ public class TspEnvironment extends Environment {
 
         return null;
 
+    }
+
+    public EdgeWeightType getEdgeWeightType() {
+        return edgeWeightType;
     }
 }

@@ -2,6 +2,7 @@ package tsp.isula.sample;
 
 import isula.aco.ConfigurationProvider;
 import isula.aco.tsp.AntForTsp;
+import isula.aco.tsp.TspEnvironment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,11 +20,11 @@ public class TspProblemConfiguration implements ConfigurationProvider {
      * In the algorithm described in the book, the initial pheromone value was a function of the quality of a
      * random solution. That logic is included in this constructor.
      *
-     * @param problemRepresentation TSP coordinate information.
+     * @param environment TSP environment with coordinate information.
      */
-    public TspProblemConfiguration(double[][] problemRepresentation) {
+    public TspProblemConfiguration(TspEnvironment environment) {
         List<Integer> randomSolution = new ArrayList<>();
-        int numberOfCities = problemRepresentation.length;
+        int numberOfCities = environment.getProblemRepresentation().length;
 
         for (int cityIndex = 0; cityIndex < numberOfCities; cityIndex += 1) {
             randomSolution.add(cityIndex);
@@ -31,7 +32,7 @@ public class TspProblemConfiguration implements ConfigurationProvider {
 
         Collections.shuffle(randomSolution);
 
-        double randomQuality = AntForTsp.getTotalDistance(randomSolution, problemRepresentation);
+        double randomQuality = AntForTsp.getTotalDistance(randomSolution, environment);
         this.initialPheromoneValue = numberOfCities / randomQuality;
     }
 
