@@ -34,8 +34,8 @@ public class AcoTspWithIsula {
     public static void main(String... args) throws IOException, ConfigurationException {
         logger.info("ANT SYSTEM FOR THE TRAVELING SALESMAN PROBLEM");
 
-        String fileName = BERLIN_52_TSP_FILE;
-//        String fileName = ATT_48_TSP_FILE;
+//        String fileName = BERLIN_52_TSP_FILE;
+        String fileName = ATT_48_TSP_FILE;
         logger.info("fileName : " + fileName);
 
         double[][] problemRepresentation = getRepresentationFromFile(fileName);
@@ -56,7 +56,7 @@ public class AcoTspWithIsula {
         solver.solveProblem();
     }
 
-    private static EdgeWeightType getEdgeWeightTypeFromFile(String fileName) throws IOException {
+    public static EdgeWeightType getEdgeWeightTypeFromFile(String fileName) throws IOException {
         File file = new File(Objects.requireNonNull(AcoTspWithIsula.class.getClassLoader().getResource(fileName)).getFile());
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
