@@ -178,14 +178,14 @@ public class AntForTsp extends Ant<Integer, TspEnvironment> {
     }
 
 
-    static double getEuclideanDistance(int anIndex, int anotherIndex, double[][] problemRepresentation) {
+    private static double getEuclideanDistance(int anIndex, int anotherIndex, double[][] problemRepresentation) {
         double[] aCoordinate = getCityCoordinates(anIndex, problemRepresentation);
         double[] anotherCoordinate = getCityCoordinates(anotherIndex, problemRepresentation);
 
         return Math.round(new EuclideanDistance().compute(aCoordinate, anotherCoordinate));
     }
 
-    static double getPseudoEuclideanDistance(int anIndex, int anotherIndex, double[][] problemRepresentation) {
+    private static double getPseudoEuclideanDistance(int anIndex, int anotherIndex, double[][] problemRepresentation) {
         double[] aCoordinate = getCityCoordinates(anIndex, problemRepresentation);
         double[] anotherCoordinate = getCityCoordinates(anotherIndex, problemRepresentation);
 
