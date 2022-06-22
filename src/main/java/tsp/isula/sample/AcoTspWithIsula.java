@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
- * This class solves the Berlin52 instance of the TSPLIB repository using an Ant System algorithm,
+ * This class solves instances of the TSPLIB repository using an Ant System algorithm,
  * trying to emulate the procedure present in Section 6.3 of the Clever Algorithms book by
  * Jason Brownlee.
  */
@@ -29,12 +29,11 @@ public class AcoTspWithIsula {
     public static final String BERLIN_52_TSP_FILE = "berlin52.tsp"; // Lower bound: 7542
     public static final String ATT_48_TSP_FILE = "att48.tsp"; // Lower bound: 10628
 
-    private static Logger logger = Logger.getLogger(AcoTspWithIsula.class.getName());
+    private static final Logger logger = Logger.getLogger(AcoTspWithIsula.class.getName());
 
     public static void main(String... args) throws IOException, ConfigurationException {
         logger.info("ANT SYSTEM FOR THE TRAVELING SALESMAN PROBLEM");
 
-//        String fileName = BERLIN_52_TSP_FILE;
         String fileName = ATT_48_TSP_FILE;
         logger.info("fileName : " + fileName);
 
@@ -48,7 +47,7 @@ public class AcoTspWithIsula {
         AcoProblemSolver<Integer, TspEnvironment> solver = new AcoProblemSolver<>();
         solver.initialize(environment, colony, configurationProvider);
         solver.addDaemonActions(new StartPheromoneMatrix<>(),
-            new PerformEvaporation<>());
+                new PerformEvaporation<>());
 
         solver.addDaemonActions(getPheromoneUpdatePolicy());
 
