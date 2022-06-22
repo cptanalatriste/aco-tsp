@@ -26,7 +26,6 @@ import java.util.logging.Logger;
  */
 public class AcoTspWithIsula {
 
-    public static final String BERLIN_52_TSP_FILE = "berlin52.tsp"; // Lower bound: 7542
     public static final String ATT_48_TSP_FILE = "att48.tsp"; // Lower bound: 10628
 
     private static final Logger logger = Logger.getLogger(AcoTspWithIsula.class.getName());
